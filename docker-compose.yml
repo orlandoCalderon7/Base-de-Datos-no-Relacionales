@@ -1,0 +1,89 @@
+services:
+  # =========================================================================
+  # 1. MongoDB 7.0 Community - Capa Documental (Catálogo, Pedidos, Comercios)
+  # =========================================================================
+  mongo-megashop:
+    image: mongo:7.0
+    container_name: mongo-megashop
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: zegel2026
+      MONGO_INITDB_DATABASE: megashop_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./02-mongodb:/scripts/mongodb:ro
+      - ./datasets:/datasets:ro
+    networks:
+      - megashop-net
+
+  # =========================================================================
+  # 2. Redis 7.2 Stack - Capa Clave-Valor en Memoria (Caché, Carritos, TTL)
+  # =========================================================================
+  redis-megashop:
+    image: redis/redis-stack:7.2.0-v9
+    container_name: redis-megashop
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis_data:/data
+      - ./03-redis:/scripts/redis:ro
+    networks:
+      - megashop-net
+
+  # =========================================================================
+  # 3. Apache Cassandra 4.1 - Capa Columna Ancha (Historial de Transacciones)
+  # =========================================================================
+  cassandra-megashop:
+    image: cassandra:4.1
+    container_name: cassandra-megashop
+    restart: unless-stopped
+    environment:
+      CASSANDRA_CLUSTER_NAME: "MegaShopCluster"
+      CASSANDRA_DC: "datacenter1"
+      CASSANDRA_RACK: "rack1"
+      CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+      MAX_HEAP_SIZE: "1024M"
+      HEAP_NEWSIZE: "256M"
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./04-cassandra:/scripts/cassandra:ro
+    networks:
+      - megashop-net
+
+  # =========================================================================
+  # 4. Neo4j 5.15 Community - Capa de Grafos (Red Social, Recomendaciones)
+  # =========================================================================
+  neo4j-megashop:
+    image: neo4j:5.15-community
+    container_name: neo4j-megashop
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: "neo4j/zegel2026"
+      NEO4J_dbms_memory_pagecache_size: "512M"
+      NEO4J_dbms_memory_heap_initial__size: "512M"
+      NEO4J_dbms_memory_heap_max__size: "1024M"
+    ports:
+      - "7474:7474" # HTTP Browser
+      - "7687:7687" # Bolt Protocol
+    volumes:
+      - neo4j_data:/data
+      - ./05-neo4j:/scripts/neo4j:ro
+    networks:
+      - megashop-net
+
+networks:
+  megashop-net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  redis_data:
+  cassandra_data:
+  neo4j_data:

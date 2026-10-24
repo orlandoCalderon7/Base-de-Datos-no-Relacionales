@@ -1,0 +1,18 @@
+# ============================================================================
+# MEGAPSHOP - REDIS 7.2 SCRIPT 03: RANKING EN VIVO CON SORTED SETS (ZSET)
+# ============================================================================
+
+# 1. Registrar o actualizar puntajes de repartidores en tiempo real
+ZADD ranking:repartidores 4.95 "rep_pedro_gomez"
+ZADD ranking:repartidores 4.88 "rep_maria_quispe"
+ZADD ranking:repartidores 4.92 "rep_luis_rodriguez"
+ZADD ranking:repartidores 4.75 "rep_ana_torres"
+
+# 2. Obtener los 3 mejores repartidores (orden descendente de score)
+ZREVRANGE ranking:repartidores 0 2 WITHSCORES
+
+# 3. Consultar la posición en el ranking de un repartidor (0-indexed)
+ZREVRANK ranking:repartidores "rep_luis_rodriguez"
+
+# 4. Incrementar calificación ante nueva reseña positiva (+0.05)
+ZINCRBY ranking:repartidores 0.05 "rep_maria_quispe"

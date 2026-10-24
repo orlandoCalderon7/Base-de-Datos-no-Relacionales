@@ -1,0 +1,15 @@
+# ============================================================================
+# MEGAPSHOP - REDIS 7.2 SCRIPT 01: SESIONES Y TOKENS CON EXPIRACIÓN (TTL)
+# ============================================================================
+
+# 1. Crear sesión de usuario activa con TTL de 3600 segundos (1 hora)
+SET session:usr_9901 '{"user_id":"CLI-9901","email":"carlos.sanchez@email.com","rol":"CLIENTE"}' EX 3600
+
+# 2. Consultar sesión de usuario
+GET session:usr_9901
+
+# 3. Verificar tiempo de vida restante (TTL en segundos)
+TTL session:usr_9901
+
+# 4. Token de recuperación de contraseña temporal (15 minutos = 900s)
+SET token:pwd_reset:usr_9901 "xyz_secure_token_9918" EX 900

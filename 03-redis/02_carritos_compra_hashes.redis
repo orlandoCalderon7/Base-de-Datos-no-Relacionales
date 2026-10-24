@@ -1,0 +1,22 @@
+# ============================================================================
+# MEGAPSHOP - REDIS 7.2 SCRIPT 02: CARRITO DE COMPRAS CON HASHES & TTL
+# ============================================================================
+
+# 1. Agregar productos al carrito del cliente CLI-9901
+HSET cart:usr_9901 "prod_bm_001" 2
+HSET cart:usr_9901 "prod_bm_002" 1
+
+# 2. Asignar expiración automática de 30 minutos (1800 segundos) al carrito inactivo
+EXPIRE cart:usr_9901 1800
+
+# 3. Incrementar atómicamente la cantidad de un producto en el carrito (+1)
+HINCRBY cart:usr_9901 "prod_bm_001" 1
+
+# 4. Obtener todos los ítems y cantidades del carrito
+HGETALL cart:usr_9901
+
+# 5. Obtener la cantidad de tipos de productos en el carrito
+HLEN cart:usr_9901
+
+# 6. Eliminar un producto del carrito
+HDEL cart:usr_9901 "prod_bm_002"
