@@ -1,0 +1,9 @@
+# Backups binarios (no commitear archivos comprimidos grandes)
+02-mongodb/backups/*.gz
+02-mongodb/backups/*.tar
+02-mongodb/backups/*.zip
+
+# Sistema operativo y logs
+.DS_Store
+Thumbs.db
+*.log
