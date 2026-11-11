@@ -17,14 +17,14 @@ services:
     networks:
       - adoptamas-network
 
-  # 🚀 2. API GATEWAY (YARP + Puerto 6000)
+  # 🚀 2. API GATEWAY (YARP + Puerto 5000)
   api-gateway:
     build:
       context: .
       dockerfile: ApiGateway/Dockerfile
     container_name: adoptamas_gateway
     ports:
-      - "6000:8080"
+      - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ReverseProxy__Clusters__auth-cluster__Destinations__dest1__Address=http://auth-service:8080

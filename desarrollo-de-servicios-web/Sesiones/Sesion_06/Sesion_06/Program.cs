@@ -14,7 +14,7 @@ Console.WriteLine("===========================================================")
 
 // 1. BOUNDED CONTEXT Y DOMINIOS INDEPENDIENTES (Diapositivas 103 y 104)
 ArquitecturaMicroservicios microservicios = new ArquitecturaMicroservicios();
-microservicios.ejecutarDemostracion();
+//microservicios.ejecutarDemostracion();
 
 // 2. COMUNICACIÓN SÍNCRONA HTTP/REST ENTRE SERVICIOS (Diapositivas 105 y 106)
 ComunicacionHttpEntreServicios comunicacion = new ComunicacionHttpEntreServicios();
@@ -26,4 +26,4 @@ ResilienciaYFallas resiliencia = new ResilienciaYFallas();
 
 // 4. PATRÓN APIGATEWAY CON YARP EN PUERTO 6000 (Diapositivas 109 y 110)
 ApiGatewayYarp gateway = new ApiGatewayYarp();
-//gateway.ejecutarDemostracion();
+gateway.ejecutarDemostracion();

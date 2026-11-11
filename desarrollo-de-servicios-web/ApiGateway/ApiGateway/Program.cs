@@ -24,7 +24,7 @@ app.MapGet("/", () => Results.Ok(new
 {
     Sistema = "AdoptaMas API - Microservicios Gateway",
     Version = "1.0.0 LTS",
-    PuertoGateway = 6000,
+    PuertoGateway = 5000,
     Rutas = new[]
     {
         "POST /api/auth/login",
@@ -34,7 +34,7 @@ app.MapGet("/", () => Results.Ok(new
         "POST /api/solicitudes"
     },
     Estado = "OPERATIVO",
-    DocumentacionScalar = "http://localhost:6001/scalar/v1"
+    DocumentacionScalar = "http://localhost:5001/scalar/v1"
 }));
 
 // 4. Mapear YARP
