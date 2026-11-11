@@ -1,0 +1,28 @@
+## .NET Core / C#
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.vs/
+.idea/
+.vscode/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+
+## Database & Temporary
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+## OS Files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # 🗄️ 1. BASE DE DATOS CONTENERIZADA (PostgreSQL 16)
+  adoptamas-db:
+    image: postgres:16-alpine
+    container_name: adoptamas_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: adoptamas_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ZegelSecretPassword2026!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - adoptamas-network
+
+  # 🚀 2. API GATEWAY (YARP + Puerto 6000)
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    container_name: adoptamas_gateway
+    ports:
+      - "6000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ReverseProxy__Clusters__auth-cluster__Destinations__dest1__Address=http://auth-service:8080
+      - ReverseProxy__Clusters__mascotas-cluster__Destinations__dest1__Address=http://mascotas-service:8080
+    depends_on:
+      - auth-service
+      - mascotas-service
+    networks:
+      - adoptamas-network
+
+  # 🔐 3. MICROSERVICIO DE AUTENTICACIÓN (JWT)
+  auth-service:
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+    container_name: adoptamas_auth
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - adoptamas-network
+
+  # 🐾 4. MICROSERVICIO DE MASCOTAS (EF Core & PostgreSQL)
+  mascotas-service:
+    build:
+      context: .
+      dockerfile: MascotasService/Dockerfile
+    container_name: adoptamas_mascotas
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=adoptamas-db;Port=5432;Database=adoptamas_db;Username=postgres;Password=ZegelSecretPassword2026!
+    depends_on:
+      - adoptamas-db
+    networks:
+      - adoptamas-network
+
+volumes:
+  postgres_data:
+
+networks:
+  adoptamas-network:
+    driver: bridge
